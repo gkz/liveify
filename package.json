@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "livescript": "1.x",
+    "object-assign": "^3.0.0",
     "through": "~2.2.0"
   },
   "devDependencies": {

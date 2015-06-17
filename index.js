@@ -1,14 +1,12 @@
 var LiveScript = require('livescript');
 var through = require('through');
-
-// Compile all variables as constants if the LSC_CONST
-// environment variable is set to "true"
-var k = process.env.LSC_CONST === 'true';
+var objectAssign = require('object-assign');
 
 // Consider files as livescript if they end in ".ls"
 var IS_LS = /\.ls$/i;
 
-module.exports = function (file) {
+module.exports = function (opts) {
+  return function (file) {
     if (!IS_LS.test(file)) return through();
     
     var data = '';
@@ -17,15 +15,18 @@ module.exports = function (file) {
     function write (buf) { data += buf }
     function end () {
         try {
-          var js = LiveScript.compile(data, {
+          var defaults = {
             'filename': file,
-            'const': k,
+            'const': false,
             'bare': true
-          });
+          };
+
+          var js = LiveScript.compile(data, objectAssign(defaults, opts));
           this.queue(js);
         } catch (e) {
           this.emit('error', e);
         }
         this.queue(null);
     }
+  }
 };
