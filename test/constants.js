@@ -2,13 +2,15 @@ var test = require('tap').test;
 var browserify = require('browserify');
 var vm = require('vm');
 
+var liveify = require('../');
+
 test('good constants', function (t) {
     t.plan(1);
     
     process.env.LSC_CONST = 'true';
     var b = browserify();
     b.add(__dirname + '/../example/constants.ls');
-    b.transform(__dirname + '/..');
+    b.transform(liveify());
     b.bundle(function (err, src) {
         if (err) return t.fail(err);
         vm.runInNewContext(src, {
@@ -27,7 +29,7 @@ test('bad constants', function (t) {
     process.env.LSC_CONST = 'true';
     var b = browserify();
     b.add(__dirname + '/../example/bad-constants.ls');
-    b.transform(__dirname + '/..');
+    b.transform(liveify());
     try {
       b.bundle(function (err, src) {
           if (err) {
