@@ -6,6 +6,8 @@ var objectAssign = require('object-assign');
 var IS_LS = /\.ls$/i;
 
 module.exports = function (opts) {
+  opts = opts || {};
+
   return function (file) {
     if (!IS_LS.test(file)) return through();
     
